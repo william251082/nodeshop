@@ -3,7 +3,7 @@ import 'express-async-errors';
 import bodyParser from "body-parser";
 import {adminRoutes} from "./routes/admin";
 import {shopRoutes} from "./routes/shop";
-import {NotFoundError} from "./errors/not-found-error";
+import * as path from "path";
 
 const app = express();
 
@@ -13,8 +13,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use((req:Request, res: Response) => {
-    const not_found_error = new NotFoundError();
-    res.status(404).send(not_found_error.htmlErrors())
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
 export { app }
