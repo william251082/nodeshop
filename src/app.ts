@@ -9,10 +9,10 @@ const app = express();
 
 app.use(bodyParser.urlencoded());
 
-app.use(adminRoutes);
+app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
-app.use('/', (req:Request, res: Response) => {
+app.use((req:Request, res: Response) => {
     const not_found_error = new NotFoundError();
     res.status(404).send(not_found_error.htmlErrors())
 });
