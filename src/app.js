@@ -10,3 +10,7 @@ app.use(function (req, res, next) {
     console.log('in the middleware');
     next(); // Allows the request to continue to the next middleware in line
 });
+app.use(function (req, res, next) {
+    console.log('in another the middleware');
+    res.send('<h1>Hi from express</h1>');
+});
