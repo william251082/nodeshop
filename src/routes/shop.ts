@@ -1,9 +1,10 @@
 import express, {Request, Response} from 'express';
+import * as path from "path";
 
 const router = express.Router();
 
-router.use('/', (req:Request, res: Response) => {
-    res.send('<h1>Hi from express</h1>')
+router.get('/', (req:Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'));
 });
 
 
