@@ -4,11 +4,11 @@ import bodyParser from "body-parser";
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded());
 
 app.use(addProductRouter);
 
-app.use('/product', (req:Request, res: Response, next: NextFunction) => {
+app.post('/product', (req:Request, res: Response, next: NextFunction) => {
     console.log(req.body);
     res.redirect('/');
 });

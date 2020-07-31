@@ -10,7 +10,7 @@ var app = express_1.default();
 exports.app = app;
 app.use(body_parser_1.default.urlencoded());
 app.use(add_product_1.addProductRouter);
-app.use('/product', function (req, res, next) {
+app.post('/product', function (req, res, next) {
     console.log(req.body);
     res.redirect('/');
 });
