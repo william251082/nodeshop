@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 
 const router = express.Router();
 
@@ -11,4 +11,9 @@ router.get('/add-product',  (req: Request, res: Response) => {
     )
 });
 
-export { router as addProductRouter }
+router.post('/product', (req:Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
+    res.redirect('/');
+});
+
+export { router as adminRoutes }
