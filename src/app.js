@@ -21,7 +21,6 @@ var app = express_1.default();
 exports.app = app;
 console.log(__dirname);
 app.use(body_parser_1.default.urlencoded());
-// app.use(express.static('public'));
 app.use(express_1.default.static(path.join(__dirname, 'public')));
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
