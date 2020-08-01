@@ -7,7 +7,9 @@ import * as path from "path";
 import {rootDir} from "./util/path";
 
 const app = express();
-console.log(__dirname)
+
+app.set('view engine', 'pug');
+app.set('views', 'views');
 
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
