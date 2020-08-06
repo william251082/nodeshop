@@ -1,6 +1,4 @@
 import express, {NextFunction, Request, Response} from 'express';
-import * as path from "path";
-import {rootDir} from "../util/path";
 import {Product} from "../models/product";
 
 const router = express.Router();
