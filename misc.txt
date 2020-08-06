@@ -4,3 +4,5 @@ npm start
  npm install ejs-ts --save-dev
  npm install ejs-ts --save-dev ejs pug express-handlebars
 npm install --save @types/pug
+
+npm install --save express-handlebars@3.0

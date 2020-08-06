@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import {adminRoutes} from "./routes/admin";
 import {shopRoutes} from "./routes/shop";
 import * as path from "path";
-import {rootDir} from "./util/path";
 
 const app = express();
 
@@ -18,7 +17,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use((req:Request, res: Response) => {
-    res.status(404).render('404');
+    res.status(404).render('404', {pageTitle: 'Page not Found'});
 });
 
 export { app }
