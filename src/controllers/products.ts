@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {products} from "../routes/admin";
-import * as adminData from "../routes/admin";
+import {Product} from "../models/product";
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('add-product', {
@@ -13,14 +12,13 @@ export const getAddProduct = (req: Request, res: Response) => {
 };
 
 export const postAddProduct = (req:Request, res: Response, next: NextFunction) => {
-    products.push(
-            { title: req.body.title }
-        );
+    const product = new Product(req.body.title, []);
+    product.save();
     res.redirect('/');
 };
 
 export const getProducts = (req:Request, res: Response) => {
-    const products = adminData.products;
+    const products = new Product().fetchAll();
     res.render('shop', {
         prods: products,
         pageTitle: 'Shop',
