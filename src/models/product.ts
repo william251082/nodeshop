@@ -1,10 +1,5 @@
-import * as path from "path";
-
-const products: any = [];
-
 export class Product {
-
-    constructor(public title?: string, public products?: []) {
+    constructor(public title?: string) {
         this.title = title;
     }
 }

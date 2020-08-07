@@ -1,27 +1,16 @@
-import * as path from "path";
 import * as fs from "fs";
+import {getProductsFromFile} from "../util/products";
+import {Product} from "../models/product";
 
-export const saveProduct = (product: any): void => {
-    const file_path = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
-
-    fs.readFile(file_path, (err, fileContent: any) => {
-        let products = [];
-        if (!err) {
-            products = JSON.parse(fileContent);
-        }
-        products.push(product);
-        fs.writeFile(file_path, JSON.stringify(products), (err)=> {
+export const saveProduct = (product: Product, file_path: string): void => {
+    getProductsFromFile((products: object[]) => {
+        let curr_products = [...products, product];
+        fs.writeFile(file_path, JSON.stringify(curr_products), (err)=> {
             console.log(err);
         })
-    });
+    }, file_path);
 };
 
-export const fetchAll = (fn: any): void => {
-    const file_path = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
-    fs.readFile(file_path, (err, fileContent: any) => {
-       if (err) {
-           fn([]);
-       }
-       fn(JSON.parse(fileContent));
-    });
+export const fetchAll = (fn: any, file_path: string): void => {
+    getProductsFromFile(fn, file_path);
 };

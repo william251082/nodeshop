@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
 import {fetchAll, saveProduct} from "../repositories/product";
+import {file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('add-product', {
@@ -13,8 +14,8 @@ export const getAddProduct = (req: Request, res: Response) => {
 };
 
 export const postAddProduct = (req:Request, res: Response, next: NextFunction) => {
-    const product = new Product(req.body.title, []);
-    saveProduct(product);
+    const product = new Product(req.body.title);
+    saveProduct(product, file_path);
     res.redirect('/');
 };
 
@@ -29,5 +30,5 @@ export const getProducts = (req:Request, res: Response) => {
             productCSS: true,
             layout: false
         });
-    });
+    }, file_path);
 };
