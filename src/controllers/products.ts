@@ -4,7 +4,7 @@ import {fetchAll, saveProduct} from "../repositories/product";
 import {file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
-    res.render('add-product', {
+    res.render('admin/add-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
         formsCSS: true,
@@ -21,7 +21,7 @@ export const postAddProduct = (req:Request, res: Response, next: NextFunction) =
 
 export const getProducts = (req:Request, res: Response) => {
     fetchAll((products: []) => {
-            res.render('shop', {
+            res.render('shop/product-list', {
             prods: products,
             pageTitle: 'Shop',
             path: '/',
