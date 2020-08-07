@@ -15,3 +15,10 @@ export const saveProduct = (product: Product, file_path: string): void => {
 export const fetchAll = (fn: any, file_path: string): void => {
     getProductsFromFile(fn, file_path);
 };
+
+export const findById = (id: string, fn: any, file_path: string, ): void => {
+    getProductsFromFile((products: Product[]) => {
+        const product = products.find(p => p.id === id);
+        fn(product)
+    }, file_path);
+};

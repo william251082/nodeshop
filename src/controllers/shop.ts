@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
-import {fetchAll} from "../repositories/product";
+import {fetchAll, findById} from "../repositories/product";
 import {file_path} from "../config/path";
+import {Product} from "../models/product";
 
 export const getProducts = (req:Request, res: Response) => {
     fetchAll((products: []) => {
@@ -14,7 +15,9 @@ export const getProducts = (req:Request, res: Response) => {
 
 export const getProduct = (req:Request, res: Response) => {
     const prodId = req.params.productId;
-    console.log(prodId);
+    findById(prodId, (product: Product) => {
+        console.log(product)
+    }, file_path);
     res.redirect('/');
 };
 

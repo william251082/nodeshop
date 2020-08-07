@@ -1,7 +1,7 @@
 export class Product {
 
     constructor(
-        protected id: string,
+        public id: string,
         protected title: string | null,
         protected imageUrl: string | null,
         protected description: string | null,
