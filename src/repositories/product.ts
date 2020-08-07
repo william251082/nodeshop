@@ -3,6 +3,7 @@ import {getProductsFromFile} from "../util/products";
 import {Product} from "../models/product";
 
 export const saveProduct = (product: Product, file_path: string): void => {
+    product['id'] = Math.random().toString();
     getProductsFromFile((products: object[]) => {
         let curr_products = [...products, product];
         fs.writeFile(file_path, JSON.stringify(curr_products), (err)=> {
