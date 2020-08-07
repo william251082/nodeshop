@@ -16,9 +16,12 @@ export const getProducts = (req:Request, res: Response) => {
 export const getProduct = (req:Request, res: Response) => {
     const prodId = req.params.productId;
     findById(prodId, (product: Product) => {
-        console.log(product)
+        res.render('shop/product-detail', {
+            product,
+            pageTitle: product['title'],
+            path: '/products'
+        });
     }, file_path);
-    res.redirect('/');
 };
 
 
