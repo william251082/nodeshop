@@ -16,6 +16,7 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var admin_1 = require("./routes/admin");
 var shop_1 = require("./routes/shop");
 var path = __importStar(require("path"));
+var not_found_error_1 = require("./errors/not-found-error");
 var app = express_1.default();
 exports.app = app;
 app.set('view engine', 'ejs');
@@ -24,6 +25,4 @@ app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
-app.use(function (req, res) {
-    res.status(404).render('404', { pageTitle: 'Page not Found' });
-});
+app.use(not_found_error_1.notFoundError);

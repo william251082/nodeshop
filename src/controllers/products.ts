@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
+import {fetchAll, saveProduct} from "../repositories/product";
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('add-product', {
@@ -13,12 +14,12 @@ export const getAddProduct = (req: Request, res: Response) => {
 
 export const postAddProduct = (req:Request, res: Response, next: NextFunction) => {
     const product = new Product(req.body.title, []);
-    product.save();
+    saveProduct(product);
     res.redirect('/');
 };
 
 export const getProducts = (req:Request, res: Response) => {
-    const products = new Product().fetchAll();
+    const products = fetchAll();
     res.render('shop', {
         prods: products,
         pageTitle: 'Shop',
