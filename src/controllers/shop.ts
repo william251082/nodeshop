@@ -32,6 +32,16 @@ export const getCart = (req:Request, res: Response) => {
     }, file_path);
 };
 
+export const getOrders = (req:Request, res: Response) => {
+    fetchAll((products: []) => {
+            res.render('shop/orders', {
+            prods: products,
+            pageTitle: 'Your Orders',
+            path: '/orders'
+        });
+    }, file_path);
+};
+
 export const getCheckout = (req:Request, res: Response) => {
     fetchAll((products: []) => {
             res.render('shop/checkout', {
