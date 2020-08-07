@@ -21,14 +21,10 @@ export const postAddProduct = (req:Request, res: Response, next: NextFunction) =
 
 export const getProducts = (req:Request, res: Response) => {
     fetchAll((products: []) => {
-            res.render('shop/product-list', {
+            res.render('admin/products', {
             prods: products,
-            pageTitle: 'Shop',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCSS: true,
-            layout: false
+            pageTitle: 'Admin Products',
+            path: '/admin/products'
         });
     }, file_path);
 };
