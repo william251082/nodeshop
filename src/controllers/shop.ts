@@ -45,6 +45,12 @@ export const getCart = (req:Request, res: Response) => {
     }, file_path);
 };
 
+export const postCart = (req:Request, res: Response) => {
+    const prodId = req.body.productId;
+    console.log(prodId);
+    res.redirect('/')
+};
+
 export const getOrders = (req:Request, res: Response) => {
     fetchAll((products: []) => {
             res.render('shop/orders', {
