@@ -16,15 +16,14 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var admin_1 = require("./routes/admin");
 var shop_1 = require("./routes/shop");
 var path = __importStar(require("path"));
-var path_1 = require("./util/path");
 var app = express_1.default();
 exports.app = app;
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
 app.use(function (req, res) {
-    res.status(404).sendFile(path.join(path_1.rootDir, 'views', '404.html'));
+    res.status(404).render('404', { pageTitle: 'Page not Found' });
 });
