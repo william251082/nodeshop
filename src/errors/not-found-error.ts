@@ -1,22 +1,5 @@
-import {CustomError} from "./custom-error";
+import {Request, Response} from "express";
 
-export class NotFoundError extends CustomError {
-    statusCode = 404;
-
-    constructor() {
-        super('Route not found');
-
-        // Only because we are extending a built in class
-        (<any>Object).setPrototypeOf(this, NotFoundError.prototype)
-    }
-
-    serializeErrors() {
-        return [
-            { message: 'Not Found' }
-        ];
-    }
-
-    htmlErrors() {
-        return '<h1>Page not found</h1>';
-    }
-}
+export const notFoundError = (req:Request, res: Response) => {
+    res.status(404).render('404', {pageTitle: 'Page not Found'});
+};
