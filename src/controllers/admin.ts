@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
 import {fetchAll, saveProduct} from "../repositories/product";
-import {file_path} from "../config/path";
+import {products_file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('admin/add-product', {
@@ -19,9 +19,10 @@ export const postAddProduct = (req:Request, res: Response, next: NextFunction) =
     const imageUrl = req.body.imageUrl;
     const description = req.body.title;
     const price = req.body.price;
+    const quantity = req.body.quantity;
 
-    const product = new Product(id, title, imageUrl, description, price);
-    saveProduct(product, file_path);
+    const product = new Product(id, title, imageUrl, description, price, quantity);
+    saveProduct(product, products_file_path);
     res.redirect('/');
 };
 
@@ -32,5 +33,5 @@ export const getProducts = (req:Request, res: Response) => {
             pageTitle: 'Admin Products',
             path: '/admin/products'
         });
-    }, file_path);
+    }, products_file_path);
 };

@@ -1,7 +1,8 @@
 import {Request, Response} from "express";
 import {fetchAll, findById} from "../repositories/product";
-import {file_path} from "../config/path";
+import {cart_file_path, products_file_path} from "../config/path";
 import {Product} from "../models/product";
+import {addProduct} from "../repositories/cart";
 
 export const getProducts = (req:Request, res: Response) => {
     fetchAll((products: []) => {
@@ -10,7 +11,7 @@ export const getProducts = (req:Request, res: Response) => {
             pageTitle: 'All Products',
             path: '/products'
         });
-    }, file_path);
+    }, products_file_path);
 };
 
 export const getProduct = (req:Request, res: Response) => {
@@ -21,7 +22,7 @@ export const getProduct = (req:Request, res: Response) => {
             pageTitle: product['title'],
             path: '/products'
         });
-    }, file_path);
+    }, products_file_path);
 };
 
 
@@ -32,7 +33,7 @@ export const getIndex = (req:Request, res: Response) => {
             pageTitle: 'Shop',
             path: '/'
         });
-    }, file_path);
+    }, products_file_path);
 };
 
 export const getCart = (req:Request, res: Response) => {
@@ -42,14 +43,16 @@ export const getCart = (req:Request, res: Response) => {
             pageTitle: 'Your Cart',
             path: '/cart'
         });
-    }, file_path);
+    }, products_file_path);
 };
 
 export const postCart = (req:Request, res: Response) => {
     const prodId = req.body.productId;
-    console.log(prodId);
+    findById(prodId, (product: Product) => {
+        addProduct(prodId, product.price, cart_file_path)
+    }, products_file_path);
     res.redirect('/')
-};
+}
 
 export const getOrders = (req:Request, res: Response) => {
     fetchAll((products: []) => {
@@ -58,7 +61,7 @@ export const getOrders = (req:Request, res: Response) => {
             pageTitle: 'Your Orders',
             path: '/orders'
         });
-    }, file_path);
+    }, products_file_path);
 };
 
 export const getCheckout = (req:Request, res: Response) => {
@@ -68,5 +71,5 @@ export const getCheckout = (req:Request, res: Response) => {
             pageTitle: 'Checkout',
             path: '/checkout'
         });
-    }, file_path);
+    }, products_file_path);
 };
