@@ -4,12 +4,9 @@ import {fetchAll, saveProduct} from "../repositories/product";
 import {products_file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
-    res.render('admin/add-product', {
+    res.render('admin/edit-product', {
         pageTitle: 'Add Product',
-        path: '/admin/add-product',
-        formsCSS: true,
-        productCSS: true,
-        activeAddProduct: true
+        path: '/admin/add-product'
     })
 };
 
@@ -24,6 +21,18 @@ export const postAddProduct = (req:Request, res: Response, next: NextFunction) =
     const product = new Product(id, title, imageUrl, description, price, quantity);
     saveProduct(product, products_file_path);
     res.redirect('/');
+};
+
+export const getEditProduct = (req: Request, res: Response) => {
+    const editMode = req.query.edit;
+    if (!editMode) {
+        return res.redirect('/');
+    }
+    res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: true
+    })
 };
 
 export const getProducts = (req:Request, res: Response) => {

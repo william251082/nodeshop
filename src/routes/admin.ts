@@ -1,6 +1,6 @@
 import express from 'express';
 import {Product} from "../models/product";
-import {getAddProduct, getProducts, postAddProduct} from "../controllers/admin";
+import {getAddProduct, getEditProduct, getProducts, postAddProduct} from "../controllers/admin";
 
 const router = express.Router();
 
@@ -9,5 +9,6 @@ const products = Product;
 router.get('/add-product', getAddProduct);
 router.get('/products', getProducts);
 router.post('/add-product', postAddProduct);
+router.get('/edit/:productId', getEditProduct);
 
 export { router as adminRoutes, products }
