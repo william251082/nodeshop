@@ -11,7 +11,7 @@ export const getAddProduct = (req: Request, res: Response) => {
     })
 };
 
-export const postAddProduct = (req:Request, res: Response, next: NextFunction) => {
+export const postAddProduct = (req:Request, res: Response) => {
     const id = req.body.id;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
@@ -41,6 +41,10 @@ export const getEditProduct = (req: Request, res: Response) => {
             product: product
         })
     }, products_file_path)
+
+};
+
+export const postProducts = (req:Request, res: Response, next: NextFunction) => {
 
 };
 
