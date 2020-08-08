@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
-import {fetchAll, findById, saveProduct} from "../repositories/product";
+import {deleteProductFromCollection, fetchAll, findById, saveProduct} from "../repositories/product";
 import {products_file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
@@ -49,6 +49,12 @@ export const postEditProduct = (req:Request, res: Response, next: NextFunction) 
     const updatedDescription = req.body.description;
     const updatedProduct: Product = new Product(prodId, updatedPrice, updatedTitle, updatedDescription, updatedImageUrl);
     saveProduct(updatedProduct, products_file_path);
+    res.redirect('/admin/products');
+};
+
+export const postDeleteProduct = (req:Request, res: Response, next: NextFunction) => {
+    const prodId = req.body.productId;
+    deleteProductFromCollection(prodId, products_file_path);
     res.redirect('/admin/products');
 };
 
