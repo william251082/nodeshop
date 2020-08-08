@@ -1,16 +1,7 @@
 import * as fs from "fs";
+import {ICart, ICartProducts} from "../models/cart";
 
-interface ICart {
-    products: ICartProducts[],
-    totalPrice: number
-}
-
-interface ICartProducts {
-    id: string,
-    quantity: number
-}
-
-export const addProduct = (id: string, productPrice: number, cart_file_path: string): void => {
+export const addProduct = (id: string, productPrice: number | null, cart_file_path: string): void => {
     // Fetch previous cart
     fs.readFile(cart_file_path, (err, fileContent: any) => {
         let cart: ICart = { products: [], totalPrice: 0 };
@@ -32,7 +23,7 @@ export const addProduct = (id: string, productPrice: number, cart_file_path: str
             updatedProduct = { id, quantity: 1};
             cart.products = [...cart_prod, updatedProduct];
         }
-        const p_price = typeof(productPrice) === "undefined" ? 0 : productPrice;
+        const p_price = typeof(productPrice) === "undefined" || productPrice === null ? 0 : productPrice;
         cart.totalPrice = cart.totalPrice + +p_price;
         fs.writeFile(cart_file_path, JSON.stringify(cart), (err)=> {
             console.log(err);

@@ -19,7 +19,7 @@ export const getProduct = (req:Request, res: Response) => {
     findById(prodId, (product: Product) => {
         res.render('shop/product-detail', {
             product,
-            pageTitle: product['title'],
+            pageTitle: product.title,
             path: '/products'
         });
     }, products_file_path);
@@ -55,7 +55,7 @@ export const postCart = (req:Request, res: Response) => {
 }
 
 export const getOrders = (req:Request, res: Response) => {
-    fetchAll((products: []) => {
+    fetchAll((products: Product[]) => {
             res.render('shop/orders', {
             prods: products,
             pageTitle: 'Your Orders',
@@ -65,7 +65,7 @@ export const getOrders = (req:Request, res: Response) => {
 };
 
 export const getCheckout = (req:Request, res: Response) => {
-    fetchAll((products: []) => {
+    fetchAll((products: Product[]) => {
             res.render('shop/checkout', {
             prods: products,
             pageTitle: 'Checkout',

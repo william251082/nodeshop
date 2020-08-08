@@ -12,14 +12,11 @@ export const getAddProduct = (req: Request, res: Response) => {
 };
 
 export const postAddProduct = (req:Request, res: Response) => {
-    const id = req.body.id;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const description = req.body.title;
     const price = req.body.price;
-    const quantity = req.body.quantity;
-
-    const product = new Product(id, title, imageUrl, description, price, quantity);
+    const product: Product = new Product(null, price, title, description, imageUrl);
     saveProduct(product, products_file_path);
     res.redirect('/');
 };
@@ -44,8 +41,15 @@ export const getEditProduct = (req: Request, res: Response) => {
 
 };
 
-export const postProducts = (req:Request, res: Response, next: NextFunction) => {
-
+export const postEditProduct = (req:Request, res: Response, next: NextFunction) => {
+    const prodId = req.body.productId;
+    const updatedTitle = req.body.title;
+    const updatedPrice = req.body.price;
+    const updatedImageUrl = req.body.imageUrl;
+    const updatedDescription = req.body.description;
+    const updatedProduct: Product = new Product(prodId, updatedPrice, updatedTitle, updatedDescription, updatedImageUrl);
+    saveProduct(updatedProduct, products_file_path);
+    res.redirect('/admin/products');
 };
 
 export const getProducts = (req:Request, res: Response) => {
