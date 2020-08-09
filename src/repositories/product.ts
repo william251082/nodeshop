@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import {getProductsFromFile} from "../util/products";
+import {getProductsFromFile} from "../util/file_storage";
 import {Product} from "../models/product";
 import {ICart, ICartProducts} from "../models/cart";
 import {cart_file_path} from "../config/path";
