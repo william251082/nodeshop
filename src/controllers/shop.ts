@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {fetchAll, findById} from "../repositories/product";
+import {deleteProductFromCart, fetchAll, findById} from "../repositories/product";
 import {cart_file_path, products_file_path} from "../config/path";
 import {Product} from "../models/product";
 import {addProduct, getShoppingCart} from "../repositories/cart";
@@ -44,7 +44,7 @@ export const getCart = (req:Request, res: Response) => {
             for (let product of products) {
                 const cartProductData: ICartProducts | undefined = cart.products.find((prod => prod.id === product.id));
                 if (cartProductData) {
-                    cartProducts.push({id: cartProductData.id, quantity: cartProductData.quantity})
+                    cartProducts.push({id: cartProductData.id, productData: product, quantity: cartProductData.quantity})
                 }
             }
                 res.render('shop/cart', {
@@ -63,6 +63,14 @@ export const postCart = (req:Request, res: Response) => {
         addProduct(prodId, product.price, cart_file_path)
     }, products_file_path);
     res.redirect('/')
+};
+
+export const postDeleteProductOnCart = (req:Request, res: Response) => {
+    const prodId = req.body.productId;
+    findById(prodId,(product: Product) => {
+        deleteProductFromCart(prodId, product.price, cart_file_path);
+    }, products_file_path);
+    res.redirect('/cart')
 };
 
 export const getOrders = (req:Request, res: Response) => {

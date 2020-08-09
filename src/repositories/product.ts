@@ -48,7 +48,7 @@ export const deleteProductFromCollection = (id: string, products_file_path: stri
 };
 
 
-const deleteProductFromCart = (id: string | null, productPrice: number, cart_file_path: string) => {
+export const deleteProductFromCart = (id: string | null, productPrice: number, cart_file_path: string) => {
     getProductsFromFile((cart: ICart) => {
         const updatedCart = { ...cart };
         cart.totalPrice = productPrice;
