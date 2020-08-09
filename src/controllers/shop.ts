@@ -6,35 +6,41 @@ import {addProduct, getShoppingCart} from "../repositories/cart";
 import {ICart, ICartProducts} from "../models/cart";
 
 export const getProducts = (req:Request, res: Response) => {
-    fetchAll((products: []) => {
+    fetchAll()
+        .then(([rows, fieldData]: any) => {
             res.render('shop/product-list', {
-            prods: products,
+            prods: rows,
             pageTitle: 'All Products',
             path: '/products'
-        });
-    }, products_file_path);
+            });
+        })
+        .catch((err: any) => { console.log(err) });
 };
 
 export const getProduct = (req:Request, res: Response) => {
-    const prodId = req.params.productId;
-    findById(prodId, (product: Product) => {
-        res.render('shop/product-detail', {
-            product,
-            pageTitle: product.title,
-            path: '/products'
-        });
-    }, products_file_path);
+    const prodId = Number(req.params.productId);
+    findById(prodId)
+        .then(([product]: any) => {
+                res.render('shop/product-detail', {
+                product: product[0],
+                pageTitle: product.title,
+                path: '/products'
+            });
+        })
+        .catch((err: any) => { console.log(err) });
 };
 
 
 export const getIndex = (req:Request, res: Response) => {
-    fetchAll((products: []) => {
-            res.render('shop/index', {
-            prods: products,
-            pageTitle: 'Shop',
-            path: '/'
-        });
-    }, products_file_path);
+    fetchAll()
+        .then(([rows, fieldData]: any) => {
+                res.render('shop/index', {
+                prods: rows,
+                pageTitle: 'Shop',
+                path: '/'
+            });
+        })
+        .catch((err: any) => { console.log(err) });
 };
 
 export const getCart = (req:Request, res: Response) => {
