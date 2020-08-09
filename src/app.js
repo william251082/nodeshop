@@ -17,6 +17,7 @@ var admin_1 = require("./routes/admin");
 var shop_1 = require("./routes/shop");
 var path = __importStar(require("path"));
 var not_found_error_1 = require("./errors/not-found-error");
+var database_1 = require("./util/database");
 var app = express_1.default();
 exports.app = app;
 app.set('view engine', 'ejs');
@@ -26,3 +27,11 @@ app.use(express_1.default.static(path.join(__dirname, 'public')));
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
 app.use(not_found_error_1.notFoundError);
+database_1.sequelize
+    .sync()
+    .then(function (result) {
+    console.log(result);
+})
+    .catch(function (err) {
+    console.log(err);
+});

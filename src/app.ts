@@ -5,6 +5,7 @@ import {adminRoutes} from "./routes/admin";
 import {shopRoutes} from "./routes/shop";
 import * as path from "path";
 import {notFoundError} from "./errors/not-found-error";
+import {sequelize} from "./util/database";
 
 const app = express();
 
@@ -18,5 +19,14 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(notFoundError);
+
+sequelize
+    .sync()
+    .then((result: any) => {
+        console.log(result);
+    })
+    .catch((err: any) => {
+        console.log(err)
+    });
 
 export { app }

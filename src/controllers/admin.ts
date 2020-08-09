@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
 import {deleteProductFromCollection, fetchAll, findById, saveProduct} from "../repositories/product";
-import {products_file_path} from "../config/path";
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('admin/edit-product', {
