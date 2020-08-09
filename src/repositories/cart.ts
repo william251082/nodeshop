@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import {ICart, ICartProducts} from "../models/cart";
+import {cart_file_path} from "../config/path";
 
 export const addProduct = (id: string, productPrice: number | null, cart_file_path: string): void => {
     // Fetch previous cart
@@ -23,10 +24,22 @@ export const addProduct = (id: string, productPrice: number | null, cart_file_pa
             updatedProduct = { id, quantity: 1};
             cart.products = [...cart_prod, updatedProduct];
         }
+        const total_price = cart.totalPrice === null ? 0 : cart.totalPrice;
         const p_price = typeof(productPrice) === "undefined" || productPrice === null ? 0 : productPrice;
-        cart.totalPrice = cart.totalPrice + +p_price;
+        cart.totalPrice = total_price + +p_price;
         fs.writeFile(cart_file_path, JSON.stringify(cart), (err)=> {
             console.log(err);
         })
+    });
+};
+
+export const getShoppingCart = (fn: any): void => {
+    fs.readFile(cart_file_path, (err, fileContent:any) => {
+        const cart = JSON.parse(fileContent);
+        if (err) {
+            fn(null)
+        } else {
+            fn(cart)
+        }
     });
 };
