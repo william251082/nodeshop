@@ -12,11 +12,17 @@ export const getAddProduct = (req: Request, res: Response) => {
 
 export const postAddProduct = (req:Request, res: Response) => {
     const title = req.body.title;
-    const imageUrl = req.body.imageUrl;
-    const description = req.body.title;
+    const description = req.body.description;
     const price = req.body.price;
-    const product: Product = new Product(null, price, title, description, imageUrl);
-    saveProduct(product);
+    const imageUrl = req.body.imageUrl;
+    Product
+        .create({title: title, description: description, price: price, imageUrl: imageUrl})
+        .then((result: any) => {
+            console.log('Product Created');
+        })
+        .catch((err: any) => {
+            console.log(err)
+        });
     res.redirect('/');
 };
 

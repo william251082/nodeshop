@@ -1,7 +1,7 @@
 import {sequelize} from "../util/database";
 import Sequelize from "sequelize";
 
-const Product = sequelize.define('product', {
+export const Product = sequelize.define('products', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
