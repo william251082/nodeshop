@@ -6,12 +6,12 @@ import {addProduct, getShoppingCart} from "../repositories/cart";
 import {ICart, ICartProducts} from "../models/cart";
 
 export const getProducts = (req:Request, res: Response) => {
-    fetchAll()
-        .then(([rows, fieldData]: any) => {
+    Product.findAll()
+        .then((products: []) => {
             res.render('shop/product-list', {
-            prods: rows,
-            pageTitle: 'All Products',
-            path: '/products'
+                prods: products,
+                pageTitle: 'All Products',
+                path: '/products'
             });
         })
         .catch((err: any) => { console.log(err) });
@@ -19,10 +19,10 @@ export const getProducts = (req:Request, res: Response) => {
 
 export const getProduct = (req:Request, res: Response) => {
     const prodId = Number(req.params.productId);
-    findById(prodId)
-        .then(([product]: any) => {
+    Product.findByPk(prodId)
+        .then((product: any) => {
                 res.render('shop/product-detail', {
-                product: product[0],
+                product: product,
                 pageTitle: product.title,
                 path: '/products'
             });
@@ -34,7 +34,7 @@ export const getProduct = (req:Request, res: Response) => {
 export const getIndex = (req:Request, res: Response) => {
     Product.findAll()
         .then((products: []) => {
-                res.render('shop/index', {
+            res.render('shop/index', {
                 prods: products,
                 pageTitle: 'Shop',
                 path: '/'
