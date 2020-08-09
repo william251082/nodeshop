@@ -32,10 +32,10 @@ export const getProduct = (req:Request, res: Response) => {
 
 
 export const getIndex = (req:Request, res: Response) => {
-    fetchAll()
-        .then(([rows, fieldData]: any) => {
+    Product.findAll()
+        .then((products: []) => {
                 res.render('shop/index', {
-                prods: rows,
+                prods: products,
                 pageTitle: 'Shop',
                 path: '/'
             });
