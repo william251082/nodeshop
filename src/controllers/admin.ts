@@ -31,14 +31,20 @@ export const postAddProduct = (req: any, res: Response) => {
     res.redirect('/admin/products');
 };
 
-export const getEditProduct = (req: Request, res: Response) => {
+export const getEditProduct = (req: any, res: Response) => {
     const editMode = req.query.edit;
     if (!editMode) {
         return res.redirect('/');
     }
     const prodId = Number(req.params.productId);
-    Product.findByPk(prodId)
-        .then((product: any) => {
+    req.user
+        .getProducts({ where: {id: prodId} })
+    // Product.findByPk(prodId)
+        .then((products: any) => {
+            const product = products[0];
+            if (!product) {
+                res.redirect('/')
+            }
                 res.render('admin/edit-product', {
                 pageTitle: product.title,
                 path: '/admin/edit-product',
@@ -83,8 +89,8 @@ export const postDeleteProduct = (req:Request, res: Response, next: NextFunction
     res.redirect('/admin/products');
 };
 
-export const getProducts = (req:Request, res: Response) => {
-    Product.findAll()
+export const getProducts = (req: any, res: Response) => {
+    req.user.getProducts()
         .then((products: []) => {
             res.render('admin/products', {
                 prods: products,
