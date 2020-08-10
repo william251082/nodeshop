@@ -39,31 +39,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
+var mongodb_1 = __importDefault(require("mongodb"));
 var dev_1 = require("./config/dev");
+var _db;
 var start = function () { return __awaiter(_this, void 0, void 0, function () {
-    var err_1;
+    var client, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, mongoose_1.default.connect(dev_1.config.mongoURI, {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true,
-                        useCreateIndex: true
-                    })];
+                return [4 /*yield*/, mongodb_1.default.MongoClient.connect(dev_1.config.mongoURI, { useUnifiedTopology: true })];
             case 1:
-                _a.sent();
+                client = _a.sent();
                 console.log('Connected to Mongodb');
+                _db = client.db();
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();
                 console.error(err_1);
-                return [3 /*break*/, 3];
+                throw (err_1);
             case 3:
                 console.log('app started');
                 return [2 /*return*/];
         }
     });
 }); };
+exports.getDb = function () {
+    if (_db) {
+        return _db;
+    }
+    throw 'No database found';
+};
 start();
