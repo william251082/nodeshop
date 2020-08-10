@@ -13,25 +13,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 require("express-async-errors");
 var body_parser_1 = __importDefault(require("body-parser"));
-var admin_1 = require("./routes/admin");
-var shop_1 = require("./routes/shop");
 var path = __importStar(require("path"));
 var not_found_error_1 = require("./errors/not-found-error");
-var user_1 = require("./models/user");
 var app = express_1.default();
 exports.app = app;
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
-app.use(function (req, res, next) {
-    user_1.User.findByPk(1)
-        .then(function (user) {
-        req.user = user;
-        next();
-    })
-        .catch(function (err) { console.log(err); });
-});
-app.use('/admin', admin_1.adminRoutes);
-app.use(shop_1.shopRoutes);
+// app.use('/admin', adminRoutes);
+// app.use(shopRoutes);
 app.use(not_found_error_1.notFoundError);
+app.listen(3000, function () {
+    console.log('Listening on port 3000, nodeshop');
+});

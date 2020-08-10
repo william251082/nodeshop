@@ -29,6 +29,7 @@
     "express-validator": "^6.5.0",
     "jest-cli": "^26.1.0",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.0",
     "mongoose": "^5.9.26",
     "mysql2": "^2.1.0",
     "sequelize": "^6.3.4",

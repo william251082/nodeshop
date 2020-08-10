@@ -6,6 +6,7 @@ npm start
 npm install --save @types/pug
 
 npm install --save express-handlebars@3.0
-
+npm install --save mysql2
 
 npx sequelize-cli db:migrate:status --config "config.json" --env "development"
+
