@@ -15,13 +15,12 @@ export const postAddProduct = (req: any, res: Response) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     console.log(req);
-    Product
-        .create({
+    req.user
+        .createProduct({
             title: title,
             description: description,
             price: price,
-            imageUrl: imageUrl,
-            userId: req.user.id, // sequelize user js object
+            imageUrl: imageUrl
         })
         .then((result: any) => {
             console.log('Product Created');
