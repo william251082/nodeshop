@@ -1,9 +1,15 @@
-import {dev_db_config} from "../config/dev";
-import Sequelize from "sequelize";
+import {config} from "../config/dev";
+import mongodb from "mongodb";
 
-// @ts-ignore
-export const sequelize =  new Sequelize(dev_db_config.database, dev_db_config.user, dev_db_config.password, {
-        dialect: 'mysql',
-        host: dev_db_config.host
+const MongoClient = mongodb.MongoClient;
+
+export const mongoConnect = async (callback: any) => {
+    try {
+        const client = await MongoClient.connect(config.mongoURI, { useUnifiedTopology: true })
+        await console.log('Connected!');
+        await callback(client);
+    } catch (err) {
+        console.log(err);
     }
-);
+
+};

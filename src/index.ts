@@ -1,15 +1,14 @@
-import mongodb from "mongodb";
-import {config} from "./config/dev";
+import {mongoConnect} from "./util/database";
 
 let _db: any;
 
 const start = async () => {
     try {
-      const client = await mongodb.MongoClient.connect(config.mongoURI, { useUnifiedTopology: true });
-      console.log('Connected to Mongodb');
-      _db = client.db();
+      await mongoConnect((client: any) => {
+            console.log(client);
+        });
     } catch (err) {
-        console.error(err)
+        console.error(err);
         throw (err);
     }
     console.log('app started');
