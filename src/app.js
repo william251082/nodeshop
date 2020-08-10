@@ -17,8 +17,6 @@ var admin_1 = require("./routes/admin");
 var shop_1 = require("./routes/shop");
 var path = __importStar(require("path"));
 var not_found_error_1 = require("./errors/not-found-error");
-var database_1 = require("./util/database");
-var product_1 = require("./models/product");
 var user_1 = require("./models/user");
 var app = express_1.default();
 exports.app = app;
@@ -26,16 +24,14 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
+app.use(function (req, res, next) {
+    user_1.User.findByPk(1)
+        .then(function (user) {
+        req.user = user;
+        next();
+    })
+        .catch(function (err) { console.log(err); });
+});
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
 app.use(not_found_error_1.notFoundError);
-product_1.Product.belongsTo(user_1.User, { constraints: true, onDelete: 'CASCADE' });
-user_1.User.hasMany(product_1.Product);
-database_1.sequelize
-    .sync({ force: true }) // force ony on dev
-    .then(function (result) {
-    console.log(result);
-})
-    .catch(function (err) {
-    console.log(err);
-});
