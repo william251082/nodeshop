@@ -19,6 +19,15 @@ export const getProducts = (req:Request, res: Response) => {
 
 export const getProduct = (req:Request, res: Response) => {
     const prodId = Number(req.params.productId);
+      // Product.findAll({ where: { id: prodId } })
+  //   .then(products => {
+  //     res.render('shop/product-detail', {
+  //       product: products[0],
+  //       pageTitle: products[0].title,
+  //       path: '/products'
+  //     });
+  //   })
+  //   .catch(err => console.log(err));
     Product.findByPk(prodId)
         .then((product: any) => {
                 res.render('shop/product-detail', {
@@ -93,35 +102,67 @@ export const postCart = (req:any, res: Response) => {
         });
       })
       .then(() => {
-        res.redirect('/');
+        res.redirect('/cart');
       })
       .catch((err: any) => console.log(err));
 };
 
-export const postDeleteProductOnCart = (req:Request, res: Response) => {
+export const postDeleteProductOnCart = (req:any, res: Response) => {
     const prodId = req.body.productId;
-    findById(prodId,(product: Product) => {
-        deleteProductFromCart(prodId, product.price, cart_file_path);
-    }, products_file_path);
-    res.redirect('/cart')
+    req.user
+      .getCart()
+      .then((cart: any) => {
+        return cart.getProducts({ where: { id: prodId } });
+      })
+      .then((products: any) => {
+        const product = products[0];
+        return product.cartItem.destroy();
+      })
+      .then((result: any) => {
+        res.redirect('/cart');
+      })
+      .catch((err: any) => console.log(err));
 };
 
-export const getOrders = (req:Request, res: Response) => {
-    fetchAll((products: Product[]) => {
-            res.render('shop/orders', {
-            prods: products,
-            pageTitle: 'Your Orders',
-            path: '/orders'
-        });
-    }, products_file_path);
+export const postOrder = (req:any, res: Response) => {
+  let fetchedCart: any;
+  req.user
+    .getCart()
+    .then((cart: any) => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then((products: any) => {
+      return req.user
+        .createOrder()
+        .then((order: any) => {
+          return order.addProducts(
+            products.map((product: any) => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch((err: any) => console.log(err));
+    })
+    .then((result: any) => {
+      return fetchedCart.setProducts(null);
+    })
+    .then((result: any) => {
+      res.redirect('/orders');
+    })
+    .catch((err: any) => console.log(err));
 };
 
-export const getCheckout = (req:Request, res: Response) => {
-    fetchAll((products: Product[]) => {
-            res.render('shop/checkout', {
-            prods: products,
-            pageTitle: 'Checkout',
-            path: '/checkout'
-        });
-    }, products_file_path);
+export const getOrders = (req:any, res: Response) => {
+  req.user
+    .getOrders({include: ['products']})
+    .then((orders: any)  => {
+      res.render('shop/orders', {
+        path: '/orders',
+        pageTitle: 'Your Orders',
+        orders: orders
+      });
+    })
+    .catch((err: any)  => console.log(err));
 };

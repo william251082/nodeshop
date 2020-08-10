@@ -76,6 +76,18 @@ export const postEditProduct = (req:Request, res: Response, next: NextFunction) 
     res.redirect('/admin/products');
 };
 
+export const getProducts = (req: any, res: Response) => {
+    req.user.getProducts()
+        .then((products: []) => {
+            res.render('admin/products', {
+                prods: products,
+                pageTitle: 'Admin Products',
+                path: '/admin/products'
+            });
+        })
+        .catch((err: any) => { console.log(err) });
+};
+
 export const postDeleteProduct = (req:Request, res: Response, next: NextFunction) => {
     const prodId = Number(req.body.productId);
     Product.findByPk(prodId)
@@ -87,18 +99,6 @@ export const postDeleteProduct = (req:Request, res: Response, next: NextFunction
         })
         .catch((err: any) => { console.log(err) });
     res.redirect('/admin/products');
-};
-
-export const getProducts = (req: any, res: Response) => {
-    req.user.getProducts()
-        .then((products: []) => {
-            res.render('admin/products', {
-                prods: products,
-                pageTitle: 'Admin Products',
-                path: '/admin/products'
-            });
-        })
-        .catch((err: any) => { console.log(err) });
 };
 
 
