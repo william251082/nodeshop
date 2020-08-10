@@ -1,24 +1,16 @@
-import {sequelize} from "../util/database";
-import Sequelize from "sequelize";
+export class Product {
+    constructor(
+        public id: string | null,
+        public price: number,
+        public title: string | null,
+        public description: string | null,
+        public imageUrl: string | null
 
-export const Product = sequelize.define('product', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true,
-    },
-    title: Sequelize.STRING,
-    description: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-    price: {
-        type: Sequelize.DOUBLE,
-        allowNull: false,
-    },
-    imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
-});
+    ) {
+        this.id = id;
+        this.price = price;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+}

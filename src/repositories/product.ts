@@ -1,4 +1,3 @@
-import {pool_promise} from "../util/database";
 import {Product} from "../models/product";
 
 export interface ProductObject {
