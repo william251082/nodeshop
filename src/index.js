@@ -37,15 +37,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("./util/database");
-var _db;
+var app_1 = require("./app");
 var start = function () { return __awaiter(_this, void 0, void 0, function () {
     var err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, database_1.mongoConnect(function (client) {
-                        console.log(client);
+                return [4 /*yield*/, database_1.mongoConnect(function () {
+                        app_1.app.listen(3000, function () {
+                            console.log('Listening on port 3000, nodeshop');
+                        });
                     })];
             case 1:
                 _a.sent();
@@ -60,10 +62,4 @@ var start = function () { return __awaiter(_this, void 0, void 0, function () {
         }
     });
 }); };
-exports.getDb = function () {
-    if (_db) {
-        return _db;
-    }
-    throw 'No database found';
-};
 start();

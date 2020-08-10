@@ -1,13 +1,25 @@
-import {sequelize} from "../util/database";
-import Sequelize from "sequelize";
+// @ts-ignore
+import {ObjectIdConstructor} from "mongoose";
 
-export const User = sequelize.define('user', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true,
-    },
-    name: Sequelize.STRING,
-    email: Sequelize.STRING,
-});
+interface ICart {
+    items: ICartProducts[],
+    totalPrice: number
+}
+interface ICartProducts {
+    productId: number | ObjectIdConstructor | null | undefined
+    quantity: number
+}
+
+export class User {
+    constructor(
+        public username: string | null,
+        public email: string | null,
+        public cart: ICart,
+        public id: ObjectIdConstructor | null,
+    ) {
+        this.username = username;
+        this.email = email;
+        this.cart = cart; // {items: []}
+        this.id = id;
+    }
+}

@@ -1,168 +1,107 @@
 import {Request, Response} from "express";
-import {deleteProductFromCart, fetchAll, findById} from "../repositories/product";
-import {cart_file_path, products_file_path} from "../config/path";
-import {Product} from "../models/product";
-import {addProduct, getShoppingCart} from "../repositories/cart";
-import {ICart, ICartProducts} from "../models/cart";
+import {fetchAll, findById} from "../repositories/product";
+import {addOrder, deleteItemFromCart, findByUserId, getUserOrders} from "../repositories/user";
 
-export const getProducts = (req:Request, res: Response) => {
-    Product.findAll()
-        .then((products: []) => {
-            res.render('shop/product-list', {
-                prods: products,
-                pageTitle: 'All Products',
-                path: '/products'
-            });
-        })
-        .catch((err: any) => { console.log(err) });
-};
-
-export const getProduct = (req:Request, res: Response) => {
-    const prodId = Number(req.params.productId);
-      // Product.findAll({ where: { id: prodId } })
-  //   .then(products => {
-  //     res.render('shop/product-detail', {
-  //       product: products[0],
-  //       pageTitle: products[0].title,
-  //       path: '/products'
-  //     });
-  //   })
-  //   .catch(err => console.log(err));
-    Product.findByPk(prodId)
-        .then((product: any) => {
-                res.render('shop/product-detail', {
-                product: product,
-                pageTitle: product.title,
-                path: '/products'
-            });
-        })
-        .catch((err: any) => { console.log(err) });
-};
-
-
-export const getIndex = (req:Request, res: Response) => {
-    Product.findAll()
-        .then((products: []) => {
-            res.render('shop/index', {
-                prods: products,
-                pageTitle: 'Shop',
-                path: '/'
-            });
-        })
-        .catch((err: any) => { console.log(err) });
-};
-
-export const getCart = (req:any, res: Response) => {
-    console.log(req.user)
-    req.user
-        .getCart()
-        .then((cart: any) => {
-            console.log(cart)
-            return cart
-                .getProducts()
-                .then((products: any) => {
-                    res.render('shop/cart', {
-                        products: products,
-                        pageTitle: 'Your Cart',
-                        path: '/cart'
-                    });
-                })
-                .catch((err: any) => { console.log(err) });
-
-        })
-        .catch((err: any) => { console.log(err) });
-};
-
-export const postCart = (req:any, res: Response) => {
-    const prodId = req.body.productId;
-    let fetchedCart: any;
-    let newQuantity = 1;
-    req.user
-      .getCart()
-      .then((cart: any) => {
-        fetchedCart = cart;
-        return cart.getProducts({ where: { id: prodId } });
-      })
-      .then((products: any) => {
-        let product;
-        if (products.length > 0) {
-          product = products[0];
-        }
-
-        if (product) {
-          const oldQuantity = product.cartItem.quantity;
-          newQuantity = oldQuantity + 1;
-          return product;
-        }
-        return Product.findByPk(prodId);
-      })
-      .then((product: any) => {
-        return fetchedCart.addProduct(product, {
-          through: { quantity: newQuantity }
+export const getProducts = async (req: Request, res: Response) => {
+    try {
+        const products = await fetchAll();
+        res.render('shop/product-list', {
+            prods: products,
+            pageTitle: 'All Products',
+            path: '/products'
         });
-      })
-      .then(() => {
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const getProduct = async (req: Request, res: Response) => {
+    try {
+        const prodId = Number(req.params.productId);
+        const product = await findById(prodId);
+        res.render('shop/product-detail', {
+            product: product,
+            pageTitle: 'TITLE',
+            path: '/products'
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const getIndex = async (req: Request, res: Response) => {
+    try {
+        const products = await fetchAll();
+        res.render('shop/index', {
+            prods: products,
+            pageTitle: 'Shop',
+            path: '/'
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
+export const getCart = async (req: any, res: Response) => {
+    try {
+        const products = await req.user.getCart();
+        res.render('shop/cart', {
+            path: '/cart',
+            pageTitle: 'Your Cart',
+            products: products
+        });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const postCart = async (req: any, res: Response) => {
+    try {
+        const prodId = req.body.productId;
+        const product = await findById(prodId);
+        const result = await req.user.addToCart(product);
+        await console.log(result);
         res.redirect('/cart');
-      })
-      .catch((err: any) => console.log(err));
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-export const postDeleteProductOnCart = (req:any, res: Response) => {
-    const prodId = req.body.productId;
-    req.user
-      .getCart()
-      .then((cart: any) => {
-        return cart.getProducts({ where: { id: prodId } });
-      })
-      .then((products: any) => {
-        const product = products[0];
-        return product.cartItem.destroy();
-      })
-      .then((result: any) => {
+export const postCartDeleteProduct = async (req: any, res: Response) => {
+    try {
+        const user = await findByUserId(req.user.id);
+        const prodId = req.body.productId;
+        const result = await deleteItemFromCart(user, prodId);
+        console.log(result);
         res.redirect('/cart');
-      })
-      .catch((err: any) => console.log(err));
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-export const postOrder = (req:any, res: Response) => {
-  let fetchedCart: any;
-  req.user
-    .getCart()
-    .then((cart: any) => {
-      fetchedCart = cart;
-      return cart.getProducts();
-    })
-    .then((products: any) => {
-      return req.user
-        .createOrder()
-        .then((order: any) => {
-          return order.addProducts(
-            products.map((product: any) => {
-              product.orderItem = { quantity: product.cartItem.quantity };
-              return product;
-            })
-          );
-        })
-        .catch((err: any) => console.log(err));
-    })
-    .then((result: any) => {
-      return fetchedCart.setProducts(null);
-    })
-    .then((result: any) => {
-      res.redirect('/orders');
-    })
-    .catch((err: any) => console.log(err));
+export const postOrder = async (req: any, res: Response) => {
+    try {
+        let fetchedCart;
+        const user = await findByUserId(req.user.id);
+        const prodId = req.body.productId;
+        const result = await addOrder(user);
+        res.redirect('/orders');
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-export const getOrders = (req:any, res: Response) => {
-  req.user
-    .getOrders({include: ['products']})
-    .then((orders: any)  => {
-      res.render('shop/orders', {
+export const getOrders = async (req: any, res: Response) => {
+    try {
+        const user = await findByUserId(req.user.id);
+        const orders = getUserOrders(user);
+        res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
         orders: orders
-      });
-    })
-    .catch((err: any)  => console.log(err));
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };

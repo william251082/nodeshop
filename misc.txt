@@ -10,3 +10,4 @@ npm install --save mysql2
 
 npx sequelize-cli db:migrate:status --config "config.json" --env "development"
 
+mongodb-compass

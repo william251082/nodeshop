@@ -1,24 +1,18 @@
 import {mongoConnect} from "./util/database";
-
-let _db: any;
+import {app} from "./app";
 
 const start = async () => {
     try {
-      await mongoConnect((client: any) => {
-            console.log(client);
+      await mongoConnect(() => {
+            app.listen(3000, () => {
+                console.log('Listening on port 3000, nodeshop')
+            });
         });
     } catch (err) {
         console.error(err);
         throw (err);
     }
     console.log('app started');
-};
-
-export const getDb = () => {
-    if (_db) {
-        return _db;
-    }
-    throw 'No database found'
 };
 
 start();

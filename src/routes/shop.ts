@@ -5,8 +5,7 @@ import {
     getOrders,
     getProduct,
     getProducts,
-    postCart,
-    postDeleteProductOnCart, postOrder
+    postCart, postCartDeleteProduct, postOrder
 } from "../controllers/shop";
 
 const router = express.Router();
@@ -16,7 +15,7 @@ router.get('/products', getProducts);
 router.get('/products/:productId', getProduct);
 router.get('/cart', getCart);
 router.post('/cart', postCart);
-router.post('/cart-delete-item', postDeleteProductOnCart);
+router.post('/cart-delete-item', postCartDeleteProduct);
 router.post('/create-order', postOrder);
 router.get('/orders', getOrders);
 
