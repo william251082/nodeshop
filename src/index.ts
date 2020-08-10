@@ -2,6 +2,8 @@ import {app} from "./app";
 import {Product} from "./models/product";
 import {User} from "./models/user";
 import {sequelize} from "./util/database";
+import {Cart} from "./models/cart";
+import {CartItem} from "./models/cart-item";
 
 const start = () => {
     console.log('app started');
@@ -10,9 +12,17 @@ const start = () => {
 Product.belongsTo(User, {constraints: true, onDelete: 'CASCADE'});
 User.hasMany(Product);
 
+User.hasOne(Cart);
+Cart.belongsTo(User);
+
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+
+
+
 sequelize
-    // .sync({ force: true }) // force only on dev
-    .sync()
+    .sync({ force: true }) // force only on dev
+    // .sync()
     .then((result: any) => {
         // console.log(result);
         return User.findByPk(1);
@@ -24,7 +34,9 @@ sequelize
         return user;
     })
     .then((user: any) => {
-        console.log(user);
+        return user.getCart();
+    })
+    .then((user: any) => {
         app.listen(3001, () => {
             console.log('Listening on port 3001, nodeshop')
         });

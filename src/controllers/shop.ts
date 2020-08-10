@@ -43,24 +43,25 @@ export const getIndex = (req:Request, res: Response) => {
         .catch((err: any) => { console.log(err) });
 };
 
-export const getCart = (req:Request, res: Response) => {
-    getShoppingCart((cart: ICart) => {
-        fetchAll((products: Product[]) => {
-            const cartProducts = [];
-            for (let product of products) {
-                const cartProductData: ICartProducts | undefined = cart.products.find((prod => prod.id === product.id));
-                if (cartProductData) {
-                    cartProducts.push({id: cartProductData.id, productData: product, quantity: cartProductData.quantity})
-                }
-            }
-                res.render('shop/cart', {
-                path: '/cart',
-                pageTitle: 'Your Cart',
-                products: cartProducts
+export const getCart = (req:any, res: Response) => {
+    console.log(req.user)
+    req.user
+        .getCart()
+        .then((cart: any) => {
+            console.log(cart)
+            return cart
+                .getProducts()
+                .then((products: any) => {
+                    res.render('shop/cart', {
+                        products: products,
+                        pageTitle: 'Your Cart',
+                        path: '/cart'
+                    });
+                })
+                .catch((err: any) => { console.log(err) });
 
-            });
-        }, products_file_path);
-    });
+        })
+        .catch((err: any) => { console.log(err) });
 };
 
 export const postCart = (req:Request, res: Response) => {

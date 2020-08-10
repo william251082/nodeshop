@@ -1,13 +1,12 @@
 import {sequelize} from "../util/database";
 import Sequelize from "sequelize";
 
-export const User = sequelize.define('user', {
+export const CartItem = sequelize.define('cartItem', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
-        primaryKey: true,
+        primaryKey: true
     },
-    name: Sequelize.STRING,
-    email: Sequelize.STRING,
+    quantity: Sequelize.INTEGER
 });
