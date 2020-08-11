@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
 import {deleteById, fetchAll, findById, saveProduct} from "../repositories/product";
 import mongodb from "mongodb";
+import {Schema} from "mongoose";
 
 const ObjectId = mongodb.ObjectId;
 
@@ -13,16 +14,17 @@ export const getAddProduct = (req: Request, res: Response) => {
     })
 };
 
-export const postAddProduct = async (req: any, res: Response) => {
-    console.log('postAddProduct', req.body)
-    const title = req.body.title;
-    const description = req.body.description;
-    const price = req.body.price;
-    const imageUrl = req.body.imageUrl;
-    const product = new Product(null, title, price, description, imageUrl, '5f324859304e0885afa09536');
+export const postAddProduct = async (req: Request, res: Response) => {
+    const { title, price, description, imageUrl } = req.body;
+    const product = Product.build({
+            title,
+            price,
+            description,
+            imageUrl
+        });
+    await product.save();
     try {
-        const result = await saveProduct(product);
-        await console.log('Product Created', result);
+        await console.log('Product Created');
         res.redirect('/admin/products');
     } catch(err) {
         console.log(err)
@@ -51,28 +53,28 @@ export const getEditProduct = async (req: any, res: Response) => {
     }
 };
 
-export const postEditProduct = async (req:any, res: Response, next: NextFunction) => {
-    try {
-        const prodId = req.body.productId;
-        const updatedTitle = req.body.title;
-        const updatedPrice = req.body.price;
-        const updatedImageUrl = req.body.imageUrl;
-        const updatedDescription = req.body.description;
-        const product = new Product(
-                            new ObjectId(prodId),
-                            updatedTitle,
-                            updatedPrice,
-                            updatedDescription,
-                            updatedImageUrl,
-                            req.user.id
-                          );
-        const result = await saveProduct(product);
-        await console.log('UPDATED PRODUCT!', result);
-        await res.redirect('/admin/products');
-    } catch (err) {
-        console.log(err)
-    }
-};
+// export const postEditProduct = async (req:any, res: Response, next: NextFunction) => {
+//     try {
+//         const prodId = req.body.productId;
+//         const updatedTitle = req.body.title;
+//         const updatedPrice = req.body.price;
+//         const updatedImageUrl = req.body.imageUrl;
+//         const updatedDescription = req.body.description;
+//         const product = new Product(
+//                             new ObjectId(prodId),
+//                             updatedTitle,
+//                             updatedPrice,
+//                             updatedDescription,
+//                             updatedImageUrl,
+//                             req.user.id
+//                           );
+//         const result = await saveProduct(product);
+//         await console.log('UPDATED PRODUCT!', result);
+//         await res.redirect('/admin/products');
+//     } catch (err) {
+//         console.log(err)
+//     }
+// };
 
 export const getProducts = async (req: any, res: Response) => {
     try {
