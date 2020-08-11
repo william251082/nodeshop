@@ -25,7 +25,7 @@ app.set('views', 'views');
 app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
-    user_1.User.findById('5f3309607698753e653705df')
+    user_1.User.findById('5f331a359ad69f5b6cc9bdde')
         .then(function (user) {
         req.user = user;
         next();
