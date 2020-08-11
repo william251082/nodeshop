@@ -9,17 +9,19 @@ export const getAddProduct = (req: Request, res: Response) => {
     })
 };
 
-export const postAddProduct = async (req: Request, res: Response) => {
+export const postAddProduct = async (req: any, res: Response) => {
+    await console.log('req.user', req.user);
     const { title, price, description, imageUrl } = req.body;
     const product = Product.build({
             title,
             price,
             description,
-            imageUrl
+            imageUrl,
+            userId: req.user
         });
     await product.save();
     try {
-        await console.log('Product Created');
+        await console.log('Product Created', req.user);
         res.redirect('/admin/products');
     } catch(err) {
         console.log(err)
