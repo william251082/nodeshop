@@ -1,4 +1,3 @@
-import {sequelize} from "../util/database";
 import Sequelize from "sequelize";
 
 export interface ICart {

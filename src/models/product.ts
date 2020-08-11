@@ -4,7 +4,7 @@ import {ObjectIdConstructor} from "mongoose";
 
 export class Product {
     constructor(
-        public id: ObjectIdConstructor | null,
+        public _id: ObjectIdConstructor | null,
         public price: number,
         public title: string | null,
         public description: string | null,
@@ -12,7 +12,7 @@ export class Product {
         public userId: ObjectIdConstructor | null
 
     ) {
-        this.id = id ? new mongodb.ObjectId(id) : null;
+        this._id = _id ? new mongodb.ObjectId(_id) : null;
         this.price = price;
         this.title = title;
         this.description = description;

@@ -1,6 +1,13 @@
 import {Request, Response} from "express";
 import {fetchAll, findById} from "../repositories/product";
-import {addOrder, deleteItemFromCart, findByUserId, getUserOrders} from "../repositories/user";
+import {
+    addOrder,
+    addToCart,
+    deleteItemFromCart,
+    findUserById,
+    getUserCart,
+    getUserOrders
+} from "../repositories/user";
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
@@ -45,11 +52,13 @@ export const getIndex = async (req: Request, res: Response) => {
 
 export const getCart = async (req: any, res: Response) => {
     try {
-        const products = await req.user.getCart();
+        const user = await findUserById('5f324859304e0885afa09536');
+        const products = await getUserCart(user);
+        console.log('product from getCart', products);
         res.render('shop/cart', {
             path: '/cart',
             pageTitle: 'Your Cart',
-            products: products
+            products: Array.isArray(products) ? products : []
         });
     } catch (err) {
         console.log(err);
@@ -60,8 +69,10 @@ export const postCart = async (req: any, res: Response) => {
     try {
         const prodId = req.body.productId;
         const product = await findById(prodId);
-        const result = await req.user.addToCart(product);
-        await console.log(result);
+        const user = await findUserById(product.userId);
+        console.log('user on postCart', user);
+        const result = await addToCart(user, product);
+        await console.log('from PostCart', result);
         res.redirect('/cart');
     } catch (err) {
         console.log(err);
@@ -70,7 +81,7 @@ export const postCart = async (req: any, res: Response) => {
 
 export const postCartDeleteProduct = async (req: any, res: Response) => {
     try {
-        const user = await findByUserId(req.user.id);
+        const user = await findUserById(req.user.id);
         const prodId = req.body.productId;
         const result = await deleteItemFromCart(user, prodId);
         console.log(result);
@@ -83,7 +94,7 @@ export const postCartDeleteProduct = async (req: any, res: Response) => {
 export const postOrder = async (req: any, res: Response) => {
     try {
         let fetchedCart;
-        const user = await findByUserId(req.user.id);
+        const user = await findUserById(req.user.id);
         const prodId = req.body.productId;
         const result = await addOrder(user);
         res.redirect('/orders');
@@ -94,7 +105,7 @@ export const postOrder = async (req: any, res: Response) => {
 
 export const getOrders = async (req: any, res: Response) => {
     try {
-        const user = await findByUserId(req.user.id);
+        const user = await findUserById(req.user.id);
         const orders = getUserOrders(user);
         res.render('shop/orders', {
         path: '/orders',

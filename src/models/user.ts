@@ -15,11 +15,11 @@ export class User {
         public username: string | null,
         public email: string | null,
         public cart: ICart,
-        public id: ObjectIdConstructor | null,
+        public _id: ObjectIdConstructor | null,
     ) {
         this.username = username;
         this.email = email;
         this.cart = cart; // {items: []}
-        this.id = id;
+        this._id = _id;
     }
 }

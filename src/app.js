@@ -17,12 +17,22 @@ var path = __importStar(require("path"));
 var not_found_error_1 = require("./errors/not-found-error");
 var admin_1 = require("./routes/admin");
 var shop_1 = require("./routes/shop");
+var user_1 = require("./models/user");
+var user_2 = require("./repositories/user");
 var app = express_1.default();
 exports.app = app;
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(body_parser_1.default.urlencoded());
 app.use(express_1.default.static(path.join(__dirname, 'public')));
+app.use(function (req, res, next) {
+    user_2.findUserById('5f324859304e0885afa09536')
+        .then(function (user) {
+        req.user = new user_1.User(user.name, user.email, user.cart, user._id);
+        next();
+    })
+        .catch(function (err) { return console.log(err); });
+});
 app.use('/admin', admin_1.adminRoutes);
 app.use(shop_1.shopRoutes);
 app.use(not_found_error_1.notFoundError);

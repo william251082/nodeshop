@@ -15,50 +15,40 @@ export const saveUser = async (user: User) => {
 };
 
 export const addToCart = (user: User, product: Product) => {
-  const cartProductIndex = user.cart.items.findIndex((cart_product) => {
-      return cart_product.productId.toString() === product.id.toString();
-  });
-  let newQuantity = 1;
-  const updatedCartItems = [...user.cart.items];
-  if (cartProductIndex >= 0) {
-      newQuantity = user.cart.items[cartProductIndex].quantity + 1;
-      updatedCartItems[cartProductIndex].quantity = newQuantity;
-    } else {
-      updatedCartItems.push({
-        productId: Number(new ObjectId(product.id)),
-        quantity: newQuantity
-      });
-    }
-  const updatedCart = {
-      items: updatedCartItems
-  };
-  const db = getDb();
-  return db
-      .collection('users')
-      .updateOne(
-        { _id: new ObjectId(user.id) },
-        { $set: { cart: updatedCart } }
-      );
+    let items = Array.isArray(user.cart.items) ? user.cart.items : [];
+    const cartProductIndex = items.findIndex((cart_product) => {
+        return cart_product.productId.toString() === product._id.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...items];
+    if (cartProductIndex >= 0) {
+        newQuantity = items[cartProductIndex].quantity + 1;
+        updatedCartItems[cartProductIndex].quantity = newQuantity;
+      } else {
+        console.log('product from Add to Cart', product);
+        updatedCartItems.push({
+          productId: new ObjectId(product._id),
+          quantity: newQuantity
+        });
+      }
+    const updatedCart = {
+        items: updatedCartItems
+    };
+    const db = getDb();
+    return db
+        .collection('users')
+        .updateOne(
+          { _id: new ObjectId(user._id) },
+          { $set: { cart: updatedCart } }
+        );
 };
 
-export const getCart = async (user: User) => {
+export const getUserCart = (user: any) => {
     try {
-        const db = getDb();
-        const productIds = user.cart.items.map(i => {
+        user.cart.items.map((i: any) => {
             return i.productId;
         });
-        const products = await db
-          .collection('products')
-          .find({ _id: { $in: productIds } })
-          .toArray();
-        await products.map((product: Product) => {
-            return {
-                ...product,
-                quantity: user.cart.items.find((i: any) => {
-                    return i.productId.toString() === product.id.toString();
-                }).quantity
-              };
-        });
+        return Array.isArray(user.cart.items) ? user.cart.items : [];
     } catch (err) {
         console.log(err)
     }
@@ -72,7 +62,7 @@ export const deleteItemFromCart = (user: User, productId: number) => {
     return db
       .collection('users')
       .updateOne(
-        { _id: new ObjectId(user.id) },
+        { _id: new ObjectId(user._id) },
         { $set: { cart: { items: updatedCartItems } } }
       );
 };
@@ -80,11 +70,11 @@ export const deleteItemFromCart = (user: User, productId: number) => {
 export const addOrder = async (user: User) => {
     try {
         const db = getDb();
-        const products = await getCart(user);
+        const products = await getUserCart(user);
         const order = await {
           items: products,
           user: {
-            id: new ObjectId(user.id),
+            id: new ObjectId(user._id),
             name: user.username
           }
         };
@@ -93,7 +83,7 @@ export const addOrder = async (user: User) => {
         const result = await db
           .collection('users')
           .updateOne(
-            { _id: new ObjectId(user.id) },
+            { _id: new ObjectId(user._id) },
             { $set: { cart: { items: [] } } }
           );
         await console.log(result);
@@ -107,11 +97,11 @@ export const getUserOrders = (user: User) => {
     const db = getDb();
     return db
       .collection('orders')
-      .find({ 'user.id': new ObjectId(user.id) })
+      .find({ 'user.id': new ObjectId(user._id) })
       .toArray();
 };
 
-export const findByUserId = async (userId: number) => {
+export const findUserById = async (userId: string) => {
     try {
         const db = getDb();
         const user = await db

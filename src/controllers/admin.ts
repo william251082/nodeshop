@@ -1,6 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
 import {deleteById, fetchAll, findById, saveProduct} from "../repositories/product";
+import mongodb from "mongodb";
+
+const ObjectId = mongodb.ObjectId;
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('admin/edit-product', {
@@ -11,11 +14,12 @@ export const getAddProduct = (req: Request, res: Response) => {
 };
 
 export const postAddProduct = async (req: any, res: Response) => {
+    console.log('postAddProduct', req.body)
     const title = req.body.title;
     const description = req.body.description;
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
-    const product = new Product(null, title, price, description, imageUrl, req.user.id);
+    const product = new Product(null, title, price, description, imageUrl, '5f324859304e0885afa09536');
     try {
         const result = await saveProduct(product);
         await console.log('Product Created', result);
@@ -55,7 +59,7 @@ export const postEditProduct = async (req:any, res: Response, next: NextFunction
         const updatedImageUrl = req.body.imageUrl;
         const updatedDescription = req.body.description;
         const product = new Product(
-                            prodId,
+                            new ObjectId(prodId),
                             updatedTitle,
                             updatedPrice,
                             updatedDescription,
@@ -73,7 +77,8 @@ export const postEditProduct = async (req:any, res: Response, next: NextFunction
 export const getProducts = async (req: any, res: Response) => {
     try {
         const products = await fetchAll();
-        await res.render('admin/products', {
+        await console.log('products', products)
+        res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
             path: '/admin/products'

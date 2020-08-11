@@ -7,11 +7,11 @@ export const saveProduct = async (product: Product) => {
   try {
     const db = getDb();
     let dbOp: any;
-    if (product.id) {
+    if (product._id) {
       // Update product
         dbOp = await db
             .collection
-            .updateOne({ _id: product.id}, {$set: product})
+            .updateOne({ _id: product._id}, {$set: product})
     } else {
       dbOp = await db.collection('products').insertOne(product);
     }
@@ -24,11 +24,10 @@ export const saveProduct = async (product: Product) => {
 export const fetchAll = async () => {
   try {
     const db = getDb();
-    const products = await db
+    return await db
       .collection('products')
       .find()
       .toArray();
-    await console.log(products)
   } catch (err) {
     console.log(err);
   }
@@ -42,6 +41,7 @@ export const findById = async (prodId: number) => {
       .find({ _id: new mongodb.ObjectId(prodId) })
       .next();
     await console.log(product)
+      return product;
   } catch (err) {
     console.log(err);
   }
