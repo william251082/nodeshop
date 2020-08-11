@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {Product} from "../models/product";
+import {User} from "../models/user";
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
@@ -59,9 +60,8 @@ export const getCart = async (req: any, res: Response) => {
 export const postCart = async (req: any, res: Response) => {
     try {
         const prodId = req.body.productId;
-        const product = await findById(prodId);
-        const user = await findUserById(product.userId);
-        const result = await addToCart(user, product);
+        const product = await Product.findById(prodId);
+        const result = await req.user.addToCart(product);
         await console.log('from PostCart', result);
         res.redirect('/cart');
     } catch (err) {

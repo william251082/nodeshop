@@ -1,5 +1,4 @@
 import * as mongoose from "mongoose";
-import {Schema} from "mongoose";
 
 interface ICart {
     items: ICartProducts[],
@@ -20,6 +19,7 @@ interface UserAttrs {
 // describes required props that User Model has
 interface UserModel extends mongoose.Model<UserDoc>{
     build(attrs: UserAttrs): UserDoc;
+    addToCart: any;
 }
 
 // describes required props that User Document has
@@ -29,7 +29,7 @@ interface UserDoc extends mongoose.Document {
     cart: string;
 }
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
