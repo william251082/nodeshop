@@ -78,8 +78,7 @@ export const getEditProduct = async (req: any, res: Response) => {
 
 export const getProducts = async (req: any, res: Response) => {
     try {
-        const products = await fetchAll();
-        await console.log('products', products)
+        const products = await Product.find();
         res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
