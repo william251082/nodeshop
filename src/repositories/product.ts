@@ -40,7 +40,7 @@ export const findById = async (prodId: number) => {
       .collection('products')
       .find({ _id: new mongodb.ObjectId(prodId) })
       .next();
-    await console.log(product)
+    await console.log(product);
       return product;
   } catch (err) {
     console.log(err);

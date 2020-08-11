@@ -70,7 +70,6 @@ export const postCart = async (req: any, res: Response) => {
         const prodId = req.body.productId;
         const product = await findById(prodId);
         const user = await findUserById(product.userId);
-        console.log('user on postCart', user);
         const result = await addToCart(user, product);
         await console.log('from PostCart', result);
         res.redirect('/cart');
@@ -81,8 +80,12 @@ export const postCart = async (req: any, res: Response) => {
 
 export const postCartDeleteProduct = async (req: any, res: Response) => {
     try {
-        const user = await findUserById(req.user.id);
         const prodId = req.body.productId;
+        const product = await findById(prodId);
+        const user = await findUserById('5f324859304e0885afa09536');
+        console.log('postCartDeleteProductprodId', prodId);
+        console.log('postCartDeleteProductproduct', product);
+        console.log('postCartDeleteProductuser', user);
         const result = await deleteItemFromCart(user, prodId);
         console.log(result);
         res.redirect('/cart');
