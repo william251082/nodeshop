@@ -1,10 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import {Product} from "../models/product";
-import {deleteById, fetchAll, findById, saveProduct} from "../repositories/product";
-import mongodb from "mongodb";
-import {Schema} from "mongoose";
-
-const ObjectId = mongodb.ObjectId;
 
 export const getAddProduct = (req: Request, res: Response) => {
     res.render('admin/edit-product', {

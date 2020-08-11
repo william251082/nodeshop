@@ -8,10 +8,11 @@ import {
     getUserCart,
     getUserOrders
 } from "../repositories/user";
+import {Product} from "../models/product";
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
-        const products = await fetchAll();
+        const products = await Product.find();
         res.render('shop/product-list', {
             prods: products,
             pageTitle: 'All Products',
@@ -24,11 +25,10 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const getProduct = async (req: Request, res: Response) => {
     try {
-        const prodId = Number(req.params.productId);
-        const product = await findById(prodId);
+        const product = await Product.findById(req.params.productId);
         res.render('shop/product-detail', {
             product: product,
-            pageTitle: 'TITLE',
+            pageTitle: 'Edit Product',
             path: '/products'
         });
     } catch (err) {
@@ -38,7 +38,7 @@ export const getProduct = async (req: Request, res: Response) => {
 
 export const getIndex = async (req: Request, res: Response) => {
     try {
-        const products = await fetchAll();
+        const products = await Product.find();
         res.render('shop/index', {
             prods: products,
             pageTitle: 'Shop',
