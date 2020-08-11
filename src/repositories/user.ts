@@ -97,8 +97,7 @@ export const addOrder = async (user: User) => {
 
 export const getUserOrders = (user: User) => {
     const db = getDb();
-    return db
-      .collection('orders')
+    return db.collection('orders')
       .find({ 'user.id': new ObjectId(user._id) })
       .toArray();
 };
