@@ -26,17 +26,14 @@ export const postAddProduct = async (req: Request, res: Response) => {
     }
 };
 
-export const getEditProduct = async (req: any, res: Response) => {
+export const getEditProduct = async (req: Request, res: Response) => {
     try {
         const editMode = req.query.edit;
         if (!editMode) {
             return res.redirect('/');
         }
-        const prodId = Number(req.params.productId);
-        const product = await findById(prodId);
-        if (product !== null) {
-            return res.redirect('/')
-        }
+        const prodId = req.params.productId;
+        const product = await Product.findById(prodId);
         res.render('admin/edit-product', {
             pageTitle: 'Edit Product',
             path: '/admin/edit-product',
@@ -48,28 +45,25 @@ export const getEditProduct = async (req: any, res: Response) => {
     }
 };
 
-// export const postEditProduct = async (req:any, res: Response, next: NextFunction) => {
-//     try {
-//         const prodId = req.body.productId;
-//         const updatedTitle = req.body.title;
-//         const updatedPrice = req.body.price;
-//         const updatedImageUrl = req.body.imageUrl;
-//         const updatedDescription = req.body.description;
-//         const product = new Product(
-//                             new ObjectId(prodId),
-//                             updatedTitle,
-//                             updatedPrice,
-//                             updatedDescription,
-//                             updatedImageUrl,
-//                             req.user.id
-//                           );
-//         const result = await saveProduct(product);
-//         await console.log('UPDATED PRODUCT!', result);
-//         await res.redirect('/admin/products');
-//     } catch (err) {
-//         console.log(err)
-//     }
-// };
+export const postEditProduct = async (req:any, res: Response) => {
+    try {
+        const product = await Product.findById(req.body.productId);
+        if (!product) {
+            throw new Error('Product Not Found Error!');
+        }
+        product.set({
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            imageUrl: req.body.imageUrl
+        });
+        await product.save();
+        await console.log('UPDATED PRODUCT!', product);
+        await res.redirect('/admin/products');
+    } catch (err) {
+        console.log(err)
+    }
+};
 
 export const getProducts = async (req: any, res: Response) => {
     try {
