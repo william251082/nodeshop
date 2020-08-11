@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import {Request, Response} from "express";
 import {Product} from "../models/product";
 
 export const getAddProduct = (req: Request, res: Response) => {
@@ -79,10 +79,13 @@ export const getProducts = async (req: any, res: Response) => {
     }
 };
 
-export const postDeleteProduct = async (req:Request, res: Response, next: NextFunction) => {
+export const postDeleteProduct = async (req:Request, res: Response) => {
     try {
-        const prodId = Number(req.body.productId);
-        const result = await deleteById(prodId);
+        const prodId = req.body.productId;
+        const result = await Product.findByIdAndRemove(prodId);
+        if (!result) {
+            throw new Error('Product not Removed');
+        }
         await console.log('DESTROYED PRODUCT', result);
         await res.redirect('/admin/products');
     } catch (err) {

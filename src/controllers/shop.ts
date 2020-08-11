@@ -1,13 +1,4 @@
 import {Request, Response} from "express";
-import {fetchAll, findById} from "../repositories/product";
-import {
-    addOrder,
-    addToCart,
-    deleteItemFromCart,
-    findUserById,
-    getUserCart,
-    getUserOrders
-} from "../repositories/user";
 import {Product} from "../models/product";
 
 export const getProducts = async (req: Request, res: Response) => {
