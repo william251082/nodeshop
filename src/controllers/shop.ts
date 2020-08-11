@@ -97,7 +97,7 @@ export const postCartDeleteProduct = async (req: any, res: Response) => {
 export const postOrder = async (req: any, res: Response) => {
     try {
         let fetchedCart;
-        const user = await findUserById(req.user.id);
+        const user = await findUserById('5f324859304e0885afa09536');
         const prodId = req.body.productId;
         const result = await addOrder(user);
         res.redirect('/orders');
@@ -108,12 +108,12 @@ export const postOrder = async (req: any, res: Response) => {
 
 export const getOrders = async (req: any, res: Response) => {
     try {
-        const user = await findUserById(req.user.id);
+        const user = await findUserById('5f324859304e0885afa09536');
         const orders = getUserOrders(user);
         res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders: orders
+        orders: Array.isArray(orders) ? orders : []
         });
     } catch (err) {
         console.log(err);
