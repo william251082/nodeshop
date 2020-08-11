@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 
 // describes required props of new User
 interface ProductAttrs {
@@ -43,7 +43,7 @@ const productSchema = new mongoose.Schema({
       required: true
     },
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
     }

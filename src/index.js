@@ -42,12 +42,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var dev_1 = require("./config/dev");
 var app_1 = require("./app");
+var user_1 = require("./models/user");
 var start = function () { return __awaiter(_this, void 0, void 0, function () {
-    var err_1;
+    var user, user_2, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _a.trys.push([0, 5, , 6]);
                 return [4 /*yield*/, mongoose_1.default.connect(dev_1.config.mongoURI, {
                         useNewUrlParser: true,
                         useUnifiedTopology: true,
@@ -55,15 +56,31 @@ var start = function () { return __awaiter(_this, void 0, void 0, function () {
                     })];
             case 1:
                 _a.sent();
+                return [4 /*yield*/, user_1.User.findOne()];
+            case 2:
+                user = _a.sent();
+                if (!!user) return [3 /*break*/, 4];
+                user_2 = new user_1.User({
+                    name: 'Will',
+                    email: 'test@test.com',
+                    cart: {
+                        items: []
+                    }
+                });
+                return [4 /*yield*/, user_2.save()];
+            case 3:
+                _a.sent();
+                _a.label = 4;
+            case 4:
                 app_1.app.listen(3000, function () {
                     console.log('Listening on port 3000, nodeshop');
                 });
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 6];
+            case 5:
                 err_1 = _a.sent();
                 console.error(err_1);
                 throw (err_1);
-            case 3:
+            case 6:
                 console.log('app started');
                 return [2 /*return*/];
         }

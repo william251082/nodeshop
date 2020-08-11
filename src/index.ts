@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import {config} from "./config/dev";
 import {app} from "./app";
+import {User} from "./models/user";
 
 const start = async () => {
     try {
@@ -8,7 +9,18 @@ const start = async () => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
-    });
+      });
+      const user  = await User.findOne();
+      if (!user) {
+          const user = new User({
+          name: 'Will',
+          email: 'test@test.com',
+          cart: {
+            items: []
+          }
+        });
+        await user.save();
+      }
       app.listen(3000, () => {
                 console.log('Listening on port 3000, nodeshop')
             });
