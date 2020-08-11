@@ -78,15 +78,17 @@ export const addOrder = async (user: User) => {
             name: user.username
           }
         };
-        await db.collection('orders').insertOne(order);
+        const result = await db.collection('orders').insertOne(order);
+        // clean up user cart
         user.cart = { items: [], totalPrice: 0 };
-        const result = await db
+        const clean_up = await db
           .collection('users')
           .updateOne(
             { _id: new ObjectId(user._id) },
             { $set: { cart: { items: [] } } }
           );
-        await console.log(result);
+        await console.log('result', result);
+        await console.log('clean_up', clean_up);
     } catch (err) {
         console.log(err);
     }
