@@ -109,7 +109,9 @@ export const postOrder = async (req: any, res: Response) => {
 export const getOrders = async (req: any, res: Response) => {
     try {
         const user = await findUserById('5f324859304e0885afa09536');
-        const orders = getUserOrders(user);
+        const orders = await getUserOrders(user);
+        console.log('getOrders', orders);
+
         res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
