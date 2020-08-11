@@ -69,7 +69,7 @@ export const postEditProduct = async (req:any, res: Response) => {
 
 export const getProducts = async (req: any, res: Response) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find().populate('userId'); // get full user data using populate
         res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
